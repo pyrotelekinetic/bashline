@@ -1,6 +1,9 @@
 lib: {
 
-  inlineToggle = pred: do: ''$(if ${pred} && ${do})'';
+  runtimeToggle = pred: x: ''$(if [ ${pred} ] && echo "${x}")'';
+  runtimeIf = pred: x1: x2:
+    ''$(if [ ${pred} ] && echo "${x1}")''
+  + ''$(if [ !${pred} ] && echo "${x2}")'';
 
   builders = {
     buildPS1 = (
