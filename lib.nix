@@ -1,32 +1,28 @@
 lib: {
 
-  runtimeToggle = pred: x: ''$(if [ ${pred} ] && echo "${x}")'';
+  runtimeToggle = pred: x:
+    ''$(if [ ${pred} ] && echo "${x}")'';
+
   runtimeIf = pred: x1: x2:
-    ''$(if [ ${pred} ] && echo "${x1}")''
-  + ''$(if [ !${pred} ] && echo "${x2}")'';
+    ''$(if [ ${pred} ] && echo "${x1}")$(if [ !${pred} ] && echo "${x2}")'';
 
   builders = {
-    buildPS1 = (
+    buildPS1 =
       { ps1 ? ''\n\[\033[1;31m\][\[\e]0;\u@\h: \w\a\]\u@\h:\w]\\$\[\033[0m\] ''
-      , before ? null
-      , after ? null
-      , scriptDepends ? null
+      , before ? ""
+      , after ? ""
+      , sources ? []
       }: with lib;
     let
-      put = x:
-        if x == null
-        then ""
-        else "${x}\n";
-      sources =
-        if scriptDepends == null
-        then ""
-        else concatMapStrings (x: "source ${x}\n") scriptDepends;
+      sources' = concatMapStringsSep "\n" (x: "source " + x) sources;
+      pruneNull = builtins.filter (x: x != null);
     in
-      ( sources
-      + put before
-      + put ''PS1="${ps1}"''
-      + put after
-      )
-    );
+      concatLines [
+        sources'
+        before
+        "PS1=${ps1}"
+        after
+      ];
   };
+
 }
