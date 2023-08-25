@@ -1,10 +1,10 @@
 lib: {
 
   runtimeToggle = pred: x:
-    ''$(if [ ${pred} ] && echo "${x}")'';
+    ''$([ ${pred} ] && echo "${x}")'';
 
   runtimeIf = pred: x1: x2:
-    ''$(if [ ${pred} ] && echo "${x1}")$(if [ !${pred} ] && echo "${x2}")'';
+    ''$([ ${pred} ] && echo "${x1}")$([! ${pred} ] && echo "${x2}")'';
 
   builders = {
     buildPS1 =
