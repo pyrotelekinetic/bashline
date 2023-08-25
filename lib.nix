@@ -20,7 +20,7 @@ lib: {
       concatLines [
         sources'
         before
-        "PS1=${ps1}"
+        "PS1=${lib.escapeShellArg ps1}"
         after
       ];
   };
